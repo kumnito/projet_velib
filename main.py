@@ -59,28 +59,33 @@ def ingest():
     stations = r_status['data']['stations']
 
     for s in stations:
-        # Extraction des compteurs
-        bikes = s.get('num_bikes_available_types', [{}, {}])
-        meca = bikes[0].get('mechanical', 0)
-        ebike = bikes[1].get('ebike', 0)
-        docks = s.get('num_docks_available', 0)
+        # 1. Extraction sécurisée des vélos
+        # On crée un dictionnaire plat à partir de la liste pour accès direct
+        bike_types = s.get('num_bikes_available_types', [])
+        counts = {list(d.keys())[0]: list(d.values())[0] for d in bike_types if d}
         
-        # Calcul du capacity_status
+        meca = int(counts.get('mechanical', 0))
+        ebike = int(counts.get('ebike', 0))
+        
+        # 2. Extraction des docks (Vérifiez bien le nom du champ dans l'API)
+        docks = int(s.get('numDocksAvailable', s.get('num_docks_available', 0)))
+        
+        # 3. Calcul du capacity_status
         total_capacity = meca + ebike + docks
         capa_pct = float((meca + ebike) / total_capacity * 100) if total_capacity > 0 else 0.0
 
         records.append({
             "station_id": int(s['station_id']),
-            "bikes_mechanical": int(meca),
-            "bikes_ebike": int(ebike),
-            "numdocksavailable": int(docks),
+            "bikes_mechanical": meca,
+            "bikes_ebike": ebike,
+            "numdocksavailable": docks,
             "is_renting": bool(s.get('is_renting') == 1),
             "capacity_status": capa_pct,
             "datetime": now_iso,
             "is_holiday": bool(is_holiday),
             "is_vacation": bool(is_vacation),
-            "apparent_temperature": float(temp),
-            "weather_code": int(w_code)
+            "apparent_temperature": temp,
+            "weather_code": w_code
         })
 
     # --- INSERTION DANS SUPABASE (Incrémentation automatique) ---
