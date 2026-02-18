@@ -85,10 +85,9 @@ def ingest():
 
     # --- INSERTION DANS SUPABASE (Incrémentation automatique) ---
     try:
-        # On utilise .insert() pour ajouter de nouvelles lignes à l'historique
-        # Supabase gère l'incrémentation via l'API REST
-        supabase.table("station_status").insert(records).execute()
-        print(f"{len(records)} relevés insérés avec succès à {now_iso}.")
+        # On remplace "station_status" par "station_snapshots" comme suggéré par l'erreur
+        supabase.table("station_snapshots").insert(records).execute()
+        print(f"{len(records)} relevés insérés avec succès.")
     except Exception as e:
         print(f"Erreur lors de l'insertion Supabase: {e}")
 
