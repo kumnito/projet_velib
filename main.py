@@ -73,7 +73,7 @@ def ingest():
             "station_id": int(s['station_id']),
             "bikes_mechanical": int(meca),
             "bikes_ebike": int(ebike),
-            "numDocksAvailable": int(docks),
+            "numdocksavailable": int(docks),
             "is_renting": bool(s.get('is_renting') == 1),
             "capacity_status": capa_pct,
             "datetime": now_iso,
