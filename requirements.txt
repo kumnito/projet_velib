@@ -1,3 +1,4 @@
 requests
 holidays
-psycopg2-binary
+supabase
+python-dotenv
