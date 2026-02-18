@@ -59,34 +59,46 @@ def ingest():
     stations = r_status['data']['stations']
 
     for s in stations:
-        # 1. Extraction sécurisée des vélos
-        # On crée un dictionnaire plat à partir de la liste pour accès direct
-        bike_types = s.get('num_bikes_available_types', [])
-        counts = {list(d.keys())[0]: list(d.values())[0] for d in bike_types if d}
+        # 1. Extraction robuste des types de vélos
+        # L'API renvoie souvent : [{'mechanical': X}, {'ebike': Y}]
+        bike_data = s.get('num_bikes_available_types', [])
         
-        meca = int(counts.get('mechanical', 0))
-        ebike = int(counts.get('ebike', 0))
+        # On initialise à 0
+        meca = 0
+        ebike = 0
         
-        # 2. Extraction des docks (Vérifiez bien le nom du champ dans l'API)
-        docks = int(s.get('numDocksAvailable', s.get('num_docks_available', 0)))
+        # On boucle sur la liste pour trouver les bonnes clés
+        for item in bike_data:
+            if 'mechanical' in item:
+                meca = int(item['mechanical'])
+            if 'ebike' in item:
+                ebike = int(item['ebike'])
         
-        # 3. Calcul du capacity_status
-        total_capacity = meca + ebike + docks
-        capa_pct = float((meca + ebike) / total_capacity * 100) if total_capacity > 0 else 0.0
+        # 2. Extraction des docks (Vérification des deux noms possibles dans l'API)
+        docks = int(s.get('num_docks_available', s.get('numDocksAvailable', 0)))
+        
+        # 3. Calcul du capacity_status (float8)
+        total_items = meca + ebike + docks
+        capa_pct = float((meca + ebike) / total_items * 100) if total_items > 0 else 0.0
 
         records.append({
-            "station_id": int(s['station_id']),
-            "bikes_mechanical": meca,
-            "bikes_ebike": ebike,
-            "numdocksavailable": docks,
-            "is_renting": bool(s.get('is_renting') == 1),
-            "capacity_status": capa_pct,
-            "datetime": now_iso,
-            "is_holiday": bool(is_holiday),
-            "is_vacation": bool(is_vacation),
-            "apparent_temperature": temp,
-            "weather_code": w_code
+            "station_id": int(s['station_id']), # int8
+            "bikes_mechanical": meca,           # int4
+            "bikes_ebike": ebike,               # int4
+            "numdocksavailable": docks,         # int4
+            "is_renting": bool(s.get('is_renting', 1) == 1), # bool
+            "capacity_status": capa_pct,        # float8
+            "datetime": now_iso,                # timestamptz
+            "is_holiday": bool(is_holiday),     # bool
+            "is_vacation": bool(is_vacation),   # bool
+            "apparent_temperature": float(temp),# float8
+            "weather_code": int(w_code)         # int4
         })
+
+    # Affichage de contrôle dans les logs GitHub Actions
+    if records:
+        test = records[0]
+        print(f"Test station {test['station_id']}: {test['bikes_mechanical']} meca, {test['bikes_ebike']} ebike, {test['numdocksavailable']} docks")
 
     # --- INSERTION DANS SUPABASE (Incrémentation automatique) ---
     try:
