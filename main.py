@@ -34,7 +34,8 @@ def run_sync():
     # 2. Récupération des données avec gestion d'erreurs (Objectif 0% NA)
     try:
         # Données Vélib'
-        res_velib = requests.get(VELIB_API_URL, timeout=20)
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        res_velib = requests.get(VELIB_API_URL, headers=headers, timeout=20)
         res_velib.raise_for_status()
         stations = res_velib.json()['data']['stations']
 
