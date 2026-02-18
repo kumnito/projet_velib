@@ -28,7 +28,7 @@ def is_paris_vacation(date_now):
 
 def run_sync():
     # 1. Configuration des APIs
-    VELIB_API_URL = "https://velib-metropole-opendata.smovengo.cloud/opendata/GetStationStatus.json"
+    VELIB_API_URL = "https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/station_status.json"
     WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&current=apparent_temperature,weather_code"
 
     # 2. Récupération des données avec gestion d'erreurs (Objectif 0% NA)
