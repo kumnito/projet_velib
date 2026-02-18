@@ -6,8 +6,8 @@ from supabase import create_client
 from datetime import datetime
 
 # Récupération de l'URL de connexion depuis les Secrets GitHub
-SUPABASE_URL = os.environ.get("SUPABASE_DB_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_DB_KEY")
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def fetch_with_retry(url, retries=3, delay=10):

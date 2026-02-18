@@ -16,6 +16,6 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run script
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_DB_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: python main.py
