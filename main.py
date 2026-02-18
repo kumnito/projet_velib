@@ -86,7 +86,7 @@ def ingest():
     # --- INSERTION DANS SUPABASE (Incrémentation automatique) ---
     try:
         # On remplace "station_status" par "station_snapshots" comme suggéré par l'erreur
-        supabase.table("station_snapshots").insert(records).execute()
+        supabase.table("station_status").insert(records).execute()
         print(f"{len(records)} relevés insérés avec succès.")
     except Exception as e:
         print(f"Erreur lors de l'insertion Supabase: {e}")
