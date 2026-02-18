@@ -13,24 +13,12 @@ def init_ref():
     
     stations = r['data']['stations']
     data_to_insert = []
-    for s in stations:
-        lat = float(s['lat'])
-        lon = float(s['lon'])
-        
-        # Logique simplifiée pour la commune (essentielle pour votre rapport)
-        # Si lat/lon est dans le périmètre de Paris intra-muros
-        if 48.81 <= lat <= 48.90 and 2.22 <= lon <= 2.47:
-            commune = "Paris"
-        else:
-            commune = "Hors-Paris" # Vous pourrez affiner plus tard en SQL
-
-        data_to_insert.append({
-            "station_id": int(s['station_id']),
-            "name": s['name'],
-            "lat": lat,
-            "lon": lon,
-            "capacity": int(s['capacity']),
-            "nom_commune": commune
+    data_to_insert.append({
+        "station_id": int(s['station_id']),
+        "name": s['name'],
+        "lat": lat,
+        "lon": lon,
+        "capacity": int(s['capacity']),
         })
     
     # Upsert par blocs de 500 pour éviter les erreurs de payload trop lourd
