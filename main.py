@@ -41,7 +41,7 @@ def ingest():
 
     # --- COLLECTE DES DONNÉES ---
     # Utilisation des URLs
-    r_status = fetch_with_retry("https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/station_information.json")
+    r_status = fetch_with_retry("https://velib-metropole-opendata.smovengo.cloud/opendata/Velib_Metropole/station_status.json")
     r_weather = fetch_with_retry("https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522&current=apparent_temperature,weather_code")
     
     is_holiday = now in fr_holidays
