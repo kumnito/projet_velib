@@ -1,7 +1,7 @@
 name: Collecte Velib 5min
 on:
   schedule:
-    - cron: '*/5 * * * *' # Toutes les 5 minutes
+    - cron: '*/10 * * * *' # Toutes les 5 minutes
   workflow_dispatch: # Lancement manuel possible
 
 jobs:
